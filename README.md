@@ -17,7 +17,7 @@ From [Proyecto_Personal].[dbo].[clientes_credito]
 Group by edad
 Order By edad 
 ```
-
+![Pregunta1](img/Pregunta1.png)
 **2. ¿Cuáles niveles educativos tienen un limite_credito promedio superior a $8,500, considerando solo aquellos grupos que tengan más de 2000 clientes en la base de datos?**
 ```sql
 Select 
