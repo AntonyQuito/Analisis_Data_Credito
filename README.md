@@ -17,7 +17,9 @@ From [Proyecto_Personal].[dbo].[clientes_credito]
 Group by edad
 Order By edad 
 ```
-![Pregunta1](img/Pregunta1.png)
+![Pregunta_1](img/Pregunta_1.png)
+
+
 **2. ¿Cuáles niveles educativos tienen un limite_credito promedio superior a $8,500, considerando solo aquellos grupos que tengan más de 2000 clientes en la base de datos?**
 ```sql
 Select 
@@ -30,6 +32,9 @@ Having
          AVG(limite_credito) > 8500
          AND COUNT(id)>2000
 ```
+![Pregunta_2](img/Pregunta_2.png)
+
+
 **3. ¿Qué grupos según su estado civil y sexo tienen un promedio de meses inactivo mayor a 1, pero a la vez generan un volumen total de transacciones superior a $100,000?**
 ```sql
 Select 
@@ -45,6 +50,8 @@ Having
          AVG(meses_inactivo_12m)>1
          AND SUM(valor_transaccion_12m)>1000000
 ```
+![Pregunta_3](img/Pregunta_3.png)
+
 **4. ¿Cuáles son los id y el tipo_tarjeta de los clientes que realizaron una cantidad de transacciones (qtd_transaccion_12m) superior al promedio de transacciones de los clientes que tienen tarjeta 'Blue'?**
 ```sql
 Select
@@ -56,6 +63,8 @@ Where
          qtd_transaccion_12m>(Select AVG(qtd_transaccion_12m) From [Proyecto_Personal].[dbo].[clientes_credito] Where tipo_tarjeta='blue')
 
 ```
+![Pregunta_4](img/Pregunta_4.png)
+
 **5. ¿Cuáles son los id de los clientes cuyo valor de transacción anual supera en al menos el doble (200%) el promedio de gasto de su mismo segmento demográfico (definido por estado civil y salario anual)?**
 
 ```sql
@@ -81,6 +90,8 @@ WHERE
     valor_transaccion_12m >= (promedio_segmento * 2);
 
 ```
+![Pregunta_5](img/Pregunta_5.png)
+
 **6. ¿Cuáles son los clientes que se ubican en el percentil 95 o superior de inactividad, cuentan con 4 o más productos, y cuyo límite de crédito intacto supera la media global de toda la cartera?**
 ```sql
 With CalculoClientes As (
@@ -107,6 +118,8 @@ Where
          Select AVG(limite_credito-valor_transaccion_12m) From [Proyecto_Personal].[dbo].[clientes_credito]
          )
 ```
+![Pregunta_6](img/Pregunta_6.png)
+
 **7. ¿Cuál es el límite de crédito promedio y cuántos clientes hay dependiendo de qué tanto exprimen su tarjeta? Clasifica a los clientes en 'Uso Alto' (gastan más del 70% de su límite), 'Uso Medio' (entre 30% y 70%) y 'Uso Bajo' (menos del 30%).**
 ```sql
 WITH CategoriasUso AS (
@@ -128,6 +141,8 @@ FROM CategoriasUso
 GROUP BY nivel_de_uso
 ORDER BY nivel_de_uso;
 ```
+![Pregunta_7](img/Pregunta_7.png)
+
 **8. ¿Quiénes son los 3 clientes con la mayor cantidad de transacciones anuales dentro de cada tipo de tarjeta para incluirlos en una campaña de recompensas?**
 ```sql
 WITH RankingClientes AS (
@@ -146,6 +161,9 @@ SELECT
 FROM RankingClientes
 WHERE puesto <= 3;
 ```
+
+![Pregunta_8](img/Pregunta_8.png)
+
 **9. ¿Cuál es la tasa exacta de morosidad, junto con el volumen total de clientes y los casos específicos de impago, segmentando la cartera por estado civil y sexo?**
 ```sql
 SELECT 
@@ -161,6 +179,8 @@ GROUP BY
 ORDER BY 
     tasa_morosidad_porcentaje DESC;
 ```
+![Pregunta_9](img/Pregunta_9.png)
+
 **10. ¿Qué clientes generan un volumen de transacciones superior al promedio global, pero experimentan alta fricción con el banco al registrar 4 o más iteraciones de servicio?**
 ```sql
 SELECT 
@@ -178,6 +198,7 @@ WHERE
 ORDER BY 
     valor_transaccion_12m DESC;
 ```
+![Pregunta_10](img/Pregunta_10.png)
 
 ## Conclusiones 
 * Conclusión 1 basada en los hallazgos de tus consultas SQL y datos.
