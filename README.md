@@ -7,9 +7,17 @@
 *(Define cuál es la meta principal que buscas alcanzar con este análisis financiero o de créditos).*
 
 ## Preguntas
-* ¿Pregunta 1 de investigación o análisis?
-* ¿Pregunta 2?
-* ¿Pregunta 3?
+
+**1. ¿Cuántos son los clientes que tienen más edad?**
+```sql
+Select
+         edad,
+         COUNT(*) as Cantidad_Clientes
+From [Proyecto_Personal].[dbo].[clientes_credito]
+Group by edad
+Order By edad
+
+
 
 ## Conclusiones 
 * Conclusión 1 basada en los hallazgos de tus consultas SQL y datos.
