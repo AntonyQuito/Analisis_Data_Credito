@@ -72,6 +72,9 @@ Todos los subgrupos evaluados cumplieron con el umbral, promediando de forma gen
 Dado que incluso los segmentos de mayor facturación (casados y solteros) presentan pausas de consumo promedio de 2 meses, el banco debería implementar campañas automáticas de reactivación (trigger marketing) al cumplirse 30 a 45 días sin movimientos, ofreciendo beneficios o promociones en comercios clave para evitar la fuga de saldo hacia otras entidades y mantener la tarjeta como medio principal de pago.
 
 **4. ¿Cuáles son los id y el tipo_tarjeta de los clientes que realizaron una cantidad de transacciones (qtd_transaccion_12m) superior al promedio de transacciones de los clientes que tienen tarjeta 'Blue'?**
+
+Utilicé una subconsulta escalar en la cláusula WHERE para calcular primero el promedio de transacciones (AVG) del segmento con tarjeta 'Blue', utilizándolo como umbral dinámico para filtrar a todos los clientes cuyo volumen de operaciones anuales (qtd_transaccion_12m) superó dicha métrica.
+
 ```sql
 Select
          id,
@@ -83,8 +86,17 @@ Where
 
 ```
 ![Pregunta_4](img/Pregunta_4.png)
+#### Clientes con actividad transaccional superior al estándar de tarjeta 'Blue'
+
+La consulta aísla a los tarjetahabientes de mayor recurrencia y uso operativo del portafolio. Dentro de este grupo destacan clientes que mantienen una tarjeta básica ('Blue') a pesar de registrar un comportamiento transaccional significativamente superior al promedio de su categoría, equiparándose al ritmo de clientes de gamas superiores (Silver, Gold o Platinum).
+
+El banco puede utilizar este segmento identificado como público objetivo para campañas de actualización de producto (upgrade). Migrar a los clientes con tarjeta 'Blue' de alta transaccionalidad hacia categorías superiores incrementaría la rentabilidad del banco por comisiones e incentivos de facturación, a la vez que se mejora la retención y fidelización del cliente mediante mejores programas de beneficios o recompensas.
 
 **5. ¿Cuáles son los id de los clientes cuyo valor de transacción anual supera en al menos el doble (200%) el promedio de gasto de su mismo segmento demográfico (definido por estado civil y salario anual)?**
+
+Para resolver esta consulta analítica avanzada, utilicé una Expresión de Tabla Común (CTE) combinada con una función de ventana (AVG() OVER (PARTITION BY...)). Esto permite calcular el promedio exacto para cada cruce demográfico (estado civil y salario) y luego utilizarlo como un filtro dinámico para encontrar a los clientes con comportamiento atípico (outliers positivos).
+
+
 
 ```sql
 WITH CalculoPromedios AS (
@@ -111,7 +123,15 @@ WHERE
 ```
 ![Pregunta_5](img/Pregunta_5.png)
 
+#### Análisis de clientes atípicos (Outliers de facturación)
+La consulta aísla un grupo estratégico de 866 clientes altamente transaccionales que superan holgadamente el umbral de gasto de sus pares demográficos. Este grupo atípico gasta en promedio 3.16 veces más que su segmento de referencia, llegando a registrar picos individuales de hasta 4.53 veces por encima de su promedio respectivo. Sorprendentemente, la mayor concentración de estos "heavy users" se ubica en el estrato de menores ingresos declarados ("menos que $40K"), destacando principalmente los clientes casados (119 casos) y solteros (98 casos) dentro de esa franja salarial.
+
+Dado que el volumen transaccional de estos clientes es estadísticamente desproporcionado respecto a su rango de ingresos formales, el banco debe abordar a este grupo bajo un enfoque dual. Desde la perspectiva de Riesgos, es fundamental monitorear el nivel de apalancamiento y la fuente de fondos para prevenir cuadros de sobreendeudamiento o mora temprana. Desde la perspectiva Comercial, si este grupo mantiene un historial de pago puntual, existe una altísima probabilidad de que perciban ingresos informales no declarados o estén utilizando su tarjeta de crédito personal para financiar capital de trabajo de microempresas (Pymes). La oportunidad radica en contactarlos para actualizar sus ingresos formales y realizar un cross-selling hacia Tarjetas de Crédito Negocios, asegurando su fidelización y ajustando su perfil de riesgo real.
+
 **6. ¿Cuáles son los clientes que se ubican en el percentil 95 o superior de inactividad, cuentan con 4 o más productos, y cuyo límite de crédito intacto supera la media global de toda la cartera?**
+
+Para aislar a este segmento de alto riesgo estructural, utilicé una Expresión de Tabla Común (CTE) junto con la función de ventana PERCENT_RANK() para calcular la posición relativa de inactividad. Posteriormente, apliqué múltiples filtros en la consulta principal para cruzar esta inactividad extrema con la tenencia de productos y una subconsulta que evalúa la línea de crédito disponible frente a la media global.
+
 ```sql
 With CalculoClientes As (
          Select
@@ -138,6 +158,10 @@ Where
          )
 ```
 ![Pregunta_6](img/Pregunta_6.png)
+#### Riesgo de Fuga en Clientes Multi-Producto (Abandono Silencioso)
+La consulta identifica un grupo sumamente crítico de 44 clientes que se encuentran en estado de "abandono silencioso". A pesar de tener un fuerte vínculo histórico con el banco (poseen entre 4 y 6 productos financieros activos), estos usuarios registran inactividad extrema de 5 a 6 meses. Además, mantienen líneas de crédito no utilizadas muy por encima del promedio, con saldos intactos que van desde los 4,200 hasta más de 32,000.
+
+Este comportamiento es un claro indicador de que el cliente ha trasladado su operatividad principal (su cuenta sueldo o tarjeta de uso diario) a un banco de la competencia, manteniendo los productos actuales únicamente por inercia. La recomendación para el área Comercial es derivar esta lista inmediatamente a una unidad de Retención VIP para ofrecer mejoras de tasas o consolidación de deudas que reactiven su uso. En paralelo, el área de Riesgos debería evaluar una política de recorte de líneas no utilizadas para este grupo, ya que mantener líneas de crédito tan altas y sin uso representa un costo de capital regulatorio innecesario para el banco.
 
 **7. ¿Cuál es el límite de crédito promedio y cuántos clientes hay dependiendo de qué tanto exprimen su tarjeta? Clasifica a los clientes en 'Uso Alto' (gastan más del 70% de su límite), 'Uso Medio' (entre 30% y 70%) y 'Uso Bajo' (menos del 30%).**
 ```sql
