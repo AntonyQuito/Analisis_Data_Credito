@@ -9,6 +9,8 @@
 ## Preguntas
 
 **1. ¿Cuántos son los clientes que tienen más edad?**
+
+Agrupé a los clientes por su edad utilizando las funciones COUNT y GROUP BY, y ordené los resultados de forma ascendente para analizar la estructura demográfica y el rango etario de la cartera.
 ```sql
 Select
          edad,
@@ -19,8 +21,15 @@ Order By edad
 ```
 ![Pregunta_1](img/Pregunta_1.png)
 
+#### Distribución por edad de los clientes de crédito
+
+La edad con mayor concentración de clientes corresponde a los 44 años con un total de 500 personas, manteniéndose el grueso de la cartera en la etapa de madurez laboral (entre 40 y 53 años). La edad mínima registrada es de 26 años (78 clientes) y la máxima es de 73 años (1 cliente), observándose una caída drástica en la cantidad de clientes a partir de los 66 años. Adicionalmente, se aprecia un repunte notable a los 65 años con 101 clientes.
+
+El banco podría diseñar campañas de colocación de créditos de mayor monto (como hipotecarios o vehiculares) orientadas al segmento de 40 a 50 años por su estabilidad económica, mientras que para el segmento joven (menores de 35 años) convendría ofrecer productos de entrada y bancarización con líneas de crédito moderadas para asegurar el recambio de la cartera.
 
 **2. ¿Cuáles niveles educativos tienen un limite_credito promedio superior a $8,500, considerando solo aquellos grupos que tengan más de 2000 clientes en la base de datos?**
+
+Calculé el límite de crédito promedio y el volumen total de clientes por nivel educativo utilizando las funciones AVG, COUNT y GROUP BY. Además, apliqué una cláusula HAVING para filtrar únicamente aquellos segmentos representativos con más de 2,000 clientes y un límite crediticio promedio superior a 8,500.
 ```sql
 Select 
          educacion,
@@ -33,9 +42,14 @@ Having
          AND COUNT(id)>2000
 ```
 ![Pregunta_2](img/Pregunta_2.png)
+#### Límite de crédito promedio y volumen de clientes por nivel educativo
+Únicamente dos categorías cumplieron con los criterios de corte: escuela secundaria y maestría. El segmento de escuela secundaria registró un límite promedio ligeramente mayor con 8,606.31 y un total de 2,013 clientes, mientras que el segmento de maestría alcanzó un promedio de 8,566.58 pero con un volumen significativamente más alto de 3,128 clientes.
 
+El banco puede enfocar estrategias diferenciadas para ambos grupos: para el segmento de maestría, dado su alto volumen y potencial de ingresos profesionales, conviene ofrecer ventas cruzadas de productos de inversión o líneas premium; para el grupo de secundaria, dado el límite asignado similar, el área de riesgos debería monitorear el comportamiento de pago y el ratio de endeudamiento para validar si la exposición crediticia se encuentra debidamente respaldada.
 
 **3. ¿Qué grupos según su estado civil y sexo tienen un promedio de meses inactivo mayor a 1, pero a la vez generan un volumen total de transacciones superior a $100,000?**
+
+Segmenté a los clientes por las dimensiones estado_civil y sexo utilizando las funciones AVG, SUM y GROUP BY. Para aislar los grupos de mayor valor transaccional que a la vez presentan ventanas de inactividad, apliqué un filtro con HAVING requiriendo un promedio de meses inactivo superior a 1 y un volumen total facturado superior a 1,000,000 en los últimos 12 meses.
 ```sql
 Select 
          estado_civil,
@@ -51,6 +65,11 @@ Having
          AND SUM(valor_transaccion_12m)>1000000
 ```
 ![Pregunta_3](img/Pregunta_3.png)
+
+#### Comportamiento transaccional e inactividad por estado civil y sexo
+Todos los subgrupos evaluados cumplieron con el umbral, promediando de forma generalizada 2 meses de inactividad en el último año. No obstante, el volumen transaccional evidencia una fuerte concentración: las mujeres casadas lideran la facturación con 10,071,458.12, seguidas por los hombres casados (9,491,670.43) y las mujeres solteras (9,497,866.86). En contraste, los segmentos de clientes divorciados y aquellos sin registrar ("na") registran los volúmenes más bajos, oscilando entre 1.5 y 1.8 millones.
+
+Dado que incluso los segmentos de mayor facturación (casados y solteros) presentan pausas de consumo promedio de 2 meses, el banco debería implementar campañas automáticas de reactivación (trigger marketing) al cumplirse 30 a 45 días sin movimientos, ofreciendo beneficios o promociones en comercios clave para evitar la fuga de saldo hacia otras entidades y mantener la tarjeta como medio principal de pago.
 
 **4. ¿Cuáles son los id y el tipo_tarjeta de los clientes que realizaron una cantidad de transacciones (qtd_transaccion_12m) superior al promedio de transacciones de los clientes que tienen tarjeta 'Blue'?**
 ```sql
