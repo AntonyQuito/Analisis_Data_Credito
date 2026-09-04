@@ -164,6 +164,9 @@ La consulta identifica un grupo sumamente crítico de 44 clientes que se encuent
 Este comportamiento es un claro indicador de que el cliente ha trasladado su operatividad principal (su cuenta sueldo o tarjeta de uso diario) a un banco de la competencia, manteniendo los productos actuales únicamente por inercia. La recomendación para el área Comercial es derivar esta lista inmediatamente a una unidad de Retención VIP para ofrecer mejoras de tasas o consolidación de deudas que reactiven su uso. En paralelo, el área de Riesgos debería evaluar una política de recorte de líneas no utilizadas para este grupo, ya que mantener líneas de crédito tan altas y sin uso representa un costo de capital regulatorio innecesario para el banco.
 
 **7. ¿Cuál es el límite de crédito promedio y cuántos clientes hay dependiendo de qué tanto exprimen su tarjeta? Clasifica a los clientes en 'Uso Alto' (gastan más del 70% de su límite), 'Uso Medio' (entre 30% y 70%) y 'Uso Bajo' (menos del 30%).**
+
+Utilicé una Expresión de Tabla Común (CTE) en conjunto con la sentencia CASE para crear una métrica personalizada del "ratio de utilización" (gasto anual dividido por el límite de crédito). Esto permitió segmentar dinámicamente a la cartera en tres niveles de intensidad de uso y luego agregar el volumen de clientes y su límite de crédito promedio con COUNT y AVG.
+
 ```sql
 WITH CategoriasUso AS (
     SELECT 
@@ -186,7 +189,16 @@ ORDER BY nivel_de_uso;
 ```
 ![Pregunta_7](img/Pregunta_7.png)
 
+#### Análisis de utilización de líneas y exposición al riesgo
+
+Los resultados revelan una clara relación inversamente proporcional entre el límite de crédito asignado y el nivel de utilización de la tarjeta. Más de la mitad de la cartera (5,181 clientes) se encuentra en el segmento de "Uso Alto" (consumiendo más del 70% de su línea), pero este grupo posee los límites de crédito promedio más bajos (3,536.56). En el extremo opuesto, el segmento de "Uso Bajo" concentra a 2,506 clientes que apenas utilizan su tarjeta, a pesar de tener los límites de crédito más altos del portafolio, promediando 18,872.35.
+
+Desde una perspectiva estratégica, el banco enfrenta dos escenarios accionables. Para el segmento de "Uso Alto", el banco debería ejecutar una campaña de Aumento de Límite de Crédito (CLI - Credit Line Increase) para aquellos perfiles que presenten un historial de pagos impecable; esto evitará que el cliente perciba su tarjeta como "topada" y migre sus próximos consumos a otras entidades. Para el segmento de "Uso Bajo", el banco tiene un alto nivel de capital inmovilizado en líneas no utilizadas; se recomienda lanzar campañas agresivas de fidelización (cashback o millas por compras de ticket alto) o, desde la óptica de Riesgos, aplicar políticas de reducción de líneas inactivas para optimizar el costo de capital regulatorio.
+
 **8. ¿Quiénes son los 3 clientes con la mayor cantidad de transacciones anuales dentro de cada tipo de tarjeta para incluirlos en una campaña de recompensas?**
+
+Para identificar a los "top performers" de cada segmento, utilicé una Expresión de Tabla Común (CTE) combinada con la función de ventana ROW_NUMBER() OVER (PARTITION BY...). Esto permitió generar un ranking independiente particionado por tipo de tarjeta, ordenando a los clientes de mayor a menor volumen transaccional, para finalmente aislar a los tres primeros lugares de cada grupo mediante un filtro en la consulta principal.
+
 ```sql
 WITH RankingClientes AS (
     SELECT 
@@ -206,8 +218,16 @@ WHERE puesto <= 3;
 ```
 
 ![Pregunta_8](img/Pregunta_8.png)
+#### Top transaccional por categoría de tarjeta (Insight)
+
+Los resultados revelan un hallazgo contraintuitivo respecto a las gamas de los productos: los clientes más activos (hipertransaccionales) pertenecen al segmento básico ('Blue'), liderando el ranking general con picos de 138 y 139 transacciones anuales. En contraste, el Top 3 de la categoría más exclusiva ('Platinum') registra la menor intensidad operativa entre todos los líderes, oscilando entre 115 y 127 transacciones. Los segmentos intermedios ('Silver' y 'Gold') muestran un comportamiento parejo, con máximos de 134 y 131 transacciones respectivamente.
+
+La campaña de recompensas debe ejecutarse con enfoques comerciales diferenciados. Para los líderes de la tarjeta 'Blue', el banco debería acompañar el premio con una campaña de Upgrade proactivo (migración a categoría Silver o Gold), capitalizando su alta fidelidad e intensidad de uso. Por el contrario, para los líderes de las tarjetas Premium ('Gold' y 'Platinum'), la recompensa debe enfocarse en fortalecer el posicionamiento Top of Wallet (ser la primera tarjeta que sacan de la billetera) mediante beneficios exclusivos como accesos VIP o multiplicadores de millas, con el objetivo de elevar su frecuencia de uso, la cual actualmente se encuentra por debajo de la tarjeta más básica.
 
 **9. ¿Cuál es la tasa exacta de morosidad, junto con el volumen total de clientes y los casos específicos de impago, segmentando la cartera por estado civil y sexo?**
+
+Para calcular la tasa de morosidad (default rate) con precisión, combiné funciones de agregación (COUNT y SUM) con una estructura condicional CASE que permite aislar y contabilizar únicamente los casos de impago (is_default = 1). Posteriormente, agrupé los resultados por estado_civil y sexo, generando la métrica porcentual al dividir los clientes morosos entre el total de cada segmento, y ordenando el reporte de mayor a menor riesgo.
+
 ```sql
 SELECT 
     estado_civil,
@@ -224,7 +244,15 @@ ORDER BY
 ```
 ![Pregunta_9](img/Pregunta_9.png)
 
+#### Análisis de riesgo crediticio por perfil demográfico
+
+El comportamiento de pago revela que el segmento femenino registra tasas de morosidad consistentemente superiores (16.80% a 18.15%) al masculino (13.28% a 16.26%). Los picos de impago se concentran en mujeres sin estado civil registrado ("na", 18.15%) y solteras (17.92%). En contraste, los hombres casados representan el perfil más sólido y de menor riesgo global de la cartera (13.28% sobre 2,236 clientes).
+
+Para el área de Riesgos, se sugiere aplicar políticas de originación más conservadoras (límites de crédito estrictos o mayor exigencia en sustento de ingresos) en perfiles solteros o sin datos completos ("na"). Paralelamente, el área Comercial debería orientar sus campañas de préstamos o compra de deuda con tasas preferenciales hacia los clientes casados, capitalizando su comportamiento predecible y bajo nivel de riesgo.
+
 **10. ¿Qué clientes generan un volumen de transacciones superior al promedio global, pero experimentan alta fricción con el banco al registrar 4 o más iteraciones de servicio?**
+
+Para identificar este riesgo, utilicé una subconsulta para calcular el promedio global de facturación y lo crucé como filtro en la cláusula WHERE, aislando simultáneamente a aquellos clientes con 4 o más iteraciones (contactos por reclamos o consultas).
 ```sql
 SELECT 
     id,
@@ -242,11 +270,21 @@ ORDER BY
     valor_transaccion_12m DESC;
 ```
 ![Pregunta_10](img/Pregunta_10.png)
+#### Análisis de fricción y riesgo de fuga (Churn)
 
+La consulta detecta un segmento sumamente crítico para el negocio: usuarios de alta rentabilidad que están experimentando una experiencia deficiente. Registrar 4 o más contactos de servicio evidencia una baja resolución en el primer contacto (FCR) y problemas recurrentes (como bloqueos inusuales, cobros no reconocidos o fallas operativas), lo que incrementa drásticamente su probabilidad de migrar a la competencia.
+
+Para proteger los ingresos que genera este grupo, el área de Experiencia del Cliente (CX) debe asignar esta lista a un equipo de resolución prioritaria (Soporte VIP) para cerrar sus casos de forma proactiva. Asimismo, se deben auditar las tipificaciones de estos contactos para identificar la causa raíz tecnológica o de procesos que está generando dicha fricción masiva.
 ## Conclusiones 
-* Conclusión 1 basada en los hallazgos de tus consultas SQL y datos.
-* Conclusión 2.
+* Uno de los descubrimientos principales fue la alta saturación operativa en usuarios de tarjetas básicas, quienes transaccionan con mayor frecuencia que los clientes premium.
 
-## Recomendaciones 
-* Recomendación 1 orientada al negocio o a la toma de decisiones.
-* Recomendación 2.
+* Se detectaron niveles de morosidad marcadamente variables dependiendo del estado civil y el sexo de los clientes.
+
+* Se evidenció un alto riesgo de fuga en clientes multiproducto que mantienen inactividad prolongada pese a tener amplias líneas disponibles.
+
+* El banco debe tomar la iniciativa y ejecutar aumentos de línea o mejoras de tarjeta (upgrades) para sus usuarios más activos.
+
+* Es fundamental recalibrar las políticas de evaluación de riesgo crediticio enfocándose en los perfiles demográficos más estables.
+
+* Resulta vital fortalecer las áreas de soporte y retención VIP para evitar la pérdida de los clientes de alto valor.
+
