@@ -9,12 +9,16 @@ El equipo Comercial y de Riesgos del banco se enfrenta al desafío de optimizar 
 Analizar la información de la cartera de clientes utilizando SQL en SQL Server Management Studio para extraer patrones de consumo, evaluar niveles de riesgo crediticio y medir el uso de los productos financieros. La meta principal es transformar estos datos en recomendaciones estratégicas que faciliten a la gerencia la toma de decisiones de negocio exitosas.
 
 ## Estructura del Proyecto
+* [Resumen](#resumen)
+* [Objetivo de Proyecto](#objetivo-de-proyecto)
+* [Sobre los Datos](#sobre-los-datos)
+* [Tareas-(Task)](#tareas-task)
+* [Análisis Exploratorio de Datos (EDA) e Insights](#análisis-exploratorio-de-datos-eda-e-insights)
+* [Conclusiones](#conclusiones)
 
-#### Sobre los Datos
-#### Tareas-(Task)
-#### Análisis Exploratorio de Datos e Insights
+## Sobre los Datos
 
-
+## Tareas-(Task)
 En este análisis, ayudo al equipo Comercial y de Riesgos del banco a responder lo siguiente:
 
 * Demografía de la Cartera: ¿Cómo se distribuye la edad de los clientes y en qué rango etario se concentra el núcleo operativo?
