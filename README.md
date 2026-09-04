@@ -1,12 +1,45 @@
 # Analisis_Data_Credito
 
 ## Resumen
-*(Escribe aquí una breve descripción general de tu proyecto, qué herramientas utilizaste y qué problema estás resolviendo con el análisis de datos).*
+
+El equipo Comercial y de Riesgos del banco se enfrenta al desafío de optimizar la rentabilidad de las tarjetas de crédito, mitigar los niveles de morosidad y retener a sus clientes de alto valor. Actualmente, carecen de una visión clara del comportamiento y los patrones transaccionales de su cartera, lo que dificulta la implementación de estrategias comerciales y de retención efectivas.
 
 ## Objetivo de Proyecto 
-*(Define cuál es la meta principal que buscas alcanzar con este análisis financiero o de créditos).*
 
-## Preguntas
+Analizar la información de la cartera de clientes utilizando SQL en SQL Server Management Studio para extraer patrones de consumo, evaluar niveles de riesgo crediticio y medir el uso de los productos financieros. La meta principal es transformar estos datos en recomendaciones estratégicas que faciliten a la gerencia la toma de decisiones de negocio exitosas.
+
+## Estructura del Proyecto
+
+- [Sobre los Datos](./datos)
+- [Tareas](./tareas)
+- [Limpieza de Datos](./limpieza)
+- [Análisis Exploratorio de Datos e Insights](./analisis)
+## Tareas (Task)
+
+En este análisis, ayudo al equipo Comercial y de Riesgos del banco a responder lo siguiente:
+
+* Demografía de la Cartera: ¿Cómo se distribuye la edad de los clientes y en qué rango etario se concentra el núcleo operativo?
+
+* Capacidad Crediticia: ¿Qué niveles educativos concentran un volumen representativo de clientes y superan un límite de crédito promedio de $8,500?
+
+* Patrones de Consumo: ¿Qué grupos, según su estado civil y sexo, presentan pausas de inactividad mayores a 1 mes pero generan un volumen de transacciones superior a $1,000,000?
+
+* Oportunidad de Upgrade: ¿Cuáles son los clientes que realizaron una cantidad de transacciones superior al promedio operativo de la tarjeta básica 'Blue'?
+
+* Gasto Atípico (Outliers): ¿Cuáles son los clientes cuyo valor de transacción anual supera en al menos el doble (200%) el promedio de gasto de su mismo segmento demográfico?
+
+* Riesgo de Fuga: ¿Qué clientes se ubican en el percentil 95 de inactividad, cuentan con 4 o más productos, y mantienen un límite de crédito intacto superior a la media global?
+
+* Utilización de Crédito: ¿Cuál es el límite de crédito promedio y cuántos clientes hay si los clasificamos en 'Uso Alto' (>70%), 'Uso Medio' (30%-70%) y 'Uso Bajo' (<30%) de su línea?
+
+* Fidelización y Recompensas: ¿Quiénes son los 3 clientes con la mayor cantidad de transacciones anuales dentro de cada tipo de tarjeta?
+
+* Calidad de Cartera (Morosidad): ¿Cuál es la tasa exacta de morosidad y los casos de impago segmentando la base por estado civil y sexo?
+
+* Experiencia de Cliente (Fricción): ¿Qué clientes generan un volumen de transacciones superior al promedio global, pe
+
+
+## Análisis Exploratorio de Datos (EDA) e Insights
 
 **1. ¿Cuántos son los clientes que tienen más edad?**
 
