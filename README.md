@@ -18,6 +18,9 @@ Analizar la información de la cartera de clientes utilizando SQL en SQL Server 
 
 ## Sobre los Datos
 
+Los datos originales, junto con una explicación de cada columna, se pueden encontrar [aquí](https://www.kaggle.com/datasets/vinivaliatic/credito).
+El conjunto de datos incluye una tabla principal que captura la información demográfica de los clientes, características de sus tarjetas, comportamiento transaccional y métricas de riesgo crediticio, distribuidos en más de 10,100 registros.
+
 ## Tareas-(Task)
 En este análisis, ayudo al equipo Comercial y de Riesgos del banco a responder lo siguiente:
 
