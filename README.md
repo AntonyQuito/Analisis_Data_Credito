@@ -11,7 +11,7 @@ Analizar la información de la cartera de clientes utilizando SQL en SQL Server 
 ## Estructura del Proyecto
 
 - [Sobre los Datos](./datos)
-- [Tareas](./tareas)
+- Tareas-(Task)
 - [Limpieza de Datos](./limpieza)
 - [Análisis Exploratorio de Datos e Insights](./analisis)
 ## Tareas (Task)
